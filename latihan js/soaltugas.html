@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gaji pegawai</title>
+</head>
+<body>
+        <h1 id="hasil"></h1>
+        <input id="jumlah" type="number" placeholder="Jumlah pegawai">
+        <button id="cek">Cek Gaji</button>
+        <script>
+        document.getElementById("cek").onclick = function() {
+            let jumlah = Number(document.getElementById("jumlah").value);
+            let hasil = "";
+            let total = 0;
+            let i = 1;
+            while (i <= jumlah) {
+                let gaji = 0;
+                if (i % 2 == 0) {
+                    gaji = 2000000;
+                } else if (i % 2 == 1) {
+                    gaji = 1500000;
+                } else {
+                    gaji = 0;
+                }
+                hasil += "Pegawai " + i + ": Rp" + gaji + "<br>";
+                total += gaji;
+                i++;
+            }
+            hasil += "Total Gaji: Rp" + total;
+            document.getElementById("hasil").innerHTML = hasil;
+        }
+        </script>
+</body>
+</html>

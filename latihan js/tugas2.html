@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tagihan Uang Kas</title>
+</head>
+<body>
+  <h1>Tagihan Uang Kas</h1>
+  <h3 id="tagihan"></h3>
+  <input type="number" id="kas">
+  <button id="tombol">Periksa</button>
+  <script>
+    document.getElementById("tombol").onclick = function() {
+      let kas = document.getElementById("kas").value;
+      let hasil = "";
+      if (kas == "" || kas == 0) {
+        hasil = "Belum bayar";
+      } else if (kas < 5000) {
+        hasil = "Kurang";
+      } else if (kas == 5000) {
+        hasil = "Pas";
+      } else {
+        hasil = "Lebih";
+      }
+     document.getElementById("tagihan").innerText = hasil;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Menu</title>
+</head>
+<body>
+    <h1 id="hasil"></h1>
+    <input id="jumlah" type="number" placeholder="Jumlah pesanan">
+    <button id="cek">Cek Order</button>
+    <script>
+    document.getElementById("cek").onclick = function() {
+      let jumlah = Number(document.getElementById("jumlah").value);
+      let hasil = "";
+      let total = 0;
+      let i = 1;
+      while (i <= jumlah) {
+        let harga = 0;
+        if (i == 1) {
+          harga = 10000; // Menu 1
+          hasil += "Menu Nasi Goreng: Rp" + harga + "<br>";
+        } else if (i == 2) {
+          harga = 8000; // Menu 2
+          hasil += "Menu Mie Goreng: Rp" + harga + "<br>";
+        } else if (i == 3) {
+          harga = 5000; // Menu 3
+          hasil += "Menu Teh Manis: Rp" + harga + "<br>";
+        } else {
+          harga = 4000; // Menu lain
+          hasil += "Menu Lain: Rp" + harga + "<br>";
+        }
+        total += harga;
+        i++;
+      }
+      hasil += "Total Order: Rp" + total;
+      document.getElementById("hasil").innerHTML = hasil;
+    }
+    </script>
+</body>
+</html>

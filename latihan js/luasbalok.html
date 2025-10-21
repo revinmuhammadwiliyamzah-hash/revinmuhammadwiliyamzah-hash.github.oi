@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hitung luas balok</title>
+</head>
+<body>
+    <script>
+        let pilihan = prompt("masukan pilihan: \n 1.luas \n 2.volume")
+        let sisi = prompt("masukan sisi")
+        let luas = sisi * sisi
+        let volume = sisi * sisi * sisi
+        if (pilihan == 1) {
+            alert("ini adalah luas =" + luas)
+        } else if (pilihan == 2) {
+            alert("ini adalah volume =" + volume)
+        } else {
+            alert("pilihan tidak valid")
+        }
+    </script>
+</body>
+</html>

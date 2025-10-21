@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OPEN MEMBER INDOMILK CLAN PB</title>
+  <style>
+    :root{font-family:Segoe UI,Roboto,Arial,sans-serif;color:#222}
+    body{max-width:900px;margin:32px auto;padding:16px}
+    header{display:flex;justify-content:space-between;align-items:center}
+    h1{margin:0;font-size:1.4rem}
+    form{background:#6b06ef;border:1px solid #1207f0;padding:16px;border-radius:8px;margin-top:12px}
+    .row{display:flex;gap:12px}
+    .col{flex:1}
+    label{display:block;font-size:0.9rem;margin-bottom:6px}
+    input,select,textarea{width:100%;padding:8px;border:1px solid #5905f4;border-radius:6px;font-size:0.95rem}
+    textarea{min-height:120px}
+  .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+  button{padding:8px 12px;border-radius:6px;border:0;background:#0066cc;color:white;cursor:pointer}
+    button.secondary{background:#555}
+  a.wa-button{display:inline-block;padding:8px 12px;border-radius:6px;background:#25D366;color:white;text-decoration:none;font-weight:600}
+  .app-wa{display:inline-block;padding:6px 8px;border-radius:6px;background:#25D366;color:white;text-decoration:none;margin-right:6px;font-size:0.85rem}
+    .error{color:#b00020;font-size:0.85rem;margin-top:6px}
+    .list{margin-top:20px}
+    .card{border:1px solid #e6e6e6;padding:12px;border-radius:8px;margin-bottom:10px;background:#fafafa}
+    .meta{font-size:0.85rem;color:#555}
+    .small{font-size:0.85rem}
+    @media (max-width:600px){.row{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OPEN MEMBER CLAN INDOMILK</h1>
+    <div style="display:flex;flex-direction:column;align-items:flex-end">
+      <div class="small"> CLAN INDOMILK</div>
+      <a class="wa-button" id="contactWA" href="#">Hubungi Admin via WhatsApp</a>
+    </div>
+  </header>
+
+  <form id="recruitForm" novalidate>
+    <div class="row">
+      <div class="col">
+        <label for="name">Nama lengkap *</label>
+        <input id="name" name="name" type="text" required>
+        <div class="error" data-for="name"></div>
+      </div>
+      <div class="col">
+        <label for="email">MASUKAN EMAIL ANDA*</label>
+        <input id="email" name="email" type="email" required>
+        <div class="error" data-for="email"></div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:8px">
+      <div class="col">
+        <label for="phone">No. Telepon *</label>
+        <input id="phone" name="phone" type="tel" required>
+        <div class="error" data-for="phone"></div>
+      </div>
+      <div class="col">
+        <label for="position">POSISI APA YANG KAMU MINAT DI  CLAN INDOMILK *</label>
+        <select id="position" name="position" required>
+          <option value="">-- Pilih posisi --</option>
+          <option>RUSHER</option>
+          <option>SUPORT</option>
+          <option>BACKUP</option>
+          <option>CADANGAN 1</option>
+          <option>CADANGAN 2</option>
+        </select>
+        <div class="error" data-for="position"></div>
+      </div>
+    </div>
+
+    <div style="margin-top:8px">
+      <label for="resume">RINGKASAN MENGALAMAN ANDA BERMAIN POINT BLANK *</label>
+      <textarea id="resume" name="resume" required placeholder="Tulis ringkasan pengalaman singkat, skill, atau link portfolio"></textarea>
+      <div class="error" data-for="resume"></div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="secondary" id="clearAll">Clear All</button>
+      <button type="submit" id="submitBtn">Kirim Lamaran</button>
+    </div>
+  </form>
+
+  <section class="list">
+    <h2>Daftar Pelamar</h2>
+    <div id="applicants"></div>
+  </section>
+
+  <script>
+    // Minimal client-side validation and localStorage persistence
+    const form = document.getElementById('recruitForm');
+    const applicantsEl = document.getElementById('applicants');
+    const storageKey = 'tugas5_applicants_v1';
+
+    function readApplicants(){
+      try{ return JSON.parse(localStorage.getItem(storageKey) || '[]'); }
+      catch(e){ return []; }
+    }
+
+    function saveApplicants(list){
+      localStorage.setItem(storageKey, JSON.stringify(list));
+    }
+
+    function render(){
+      const list = readApplicants();
+      applicantsEl.innerHTML = '';
+      if(list.length===0){ applicantsEl.innerHTML = '<div class="small">Belum ada pelamar.</div>'; return; }
+      list.slice().reverse().forEach((item,i)=>{
+        const idx = list.length-1-i; // actual index in array
+        const card = document.createElement('div'); card.className='card';
+        const waLink = phoneToWaLink(item.phone, `Halo ${item.name}, terima kasih telah melamar untuk posisi ${item.position}.`);
+        card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:start"><div>
+            <strong>${escapeHtml(item.name)}</strong>
+            <div class="meta">${escapeHtml(item.position)} · ${escapeHtml(item.email)} · ${escapeHtml(item.phone)}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+            <div>
+              <a class="app-wa" href="${waLink}" target="_blank" rel="noopener">Chat WA</a>
+              <button data-delete-index="${idx}" style="background:#b00020">Hapus</button>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:8px">${escapeHtml(item.resume).replace(/\n/g,'<br>')}</div>`;
+        applicantsEl.appendChild(card);
+      });
+
+      // attach delete handlers
+      applicantsEl.querySelectorAll('button[data-delete-index]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const idx = Number(btn.getAttribute('data-delete-index'));
+          const arr = readApplicants(); arr.splice(idx,1); saveApplicants(arr); render();
+        });
+      });
+    }
+
+    function escapeHtml(s){
+      if(!s) return '';
+      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    // Convert a phone number to a wa.me link. message is optional URL-encoded text.
+    function phoneToWaLink(phone, message=''){
+      if(!phone) return '#';
+      // remove spaces, parentheses, dashes, leading +
+      const digits = phone.replace(/[\s\-()\.]/g,'').replace(/^\+/, '');
+      const encoded = message ? encodeURIComponent(message) : '';
+      return encoded ? `https://wa.me/${digits}?text=${encoded}` : `https://wa.me/${digits}`;
+    }
+
+    function clearErrors(){
+      form.querySelectorAll('.error').forEach(e=>e.textContent='');
+    }
+
+    function validate(values){
+      const errors = {};
+      if(!values.name || values.name.trim().length < 2) errors.name = 'Nama harus minimal 2 karakter.';
+      if(!values.email || !/^\S+@\S+\.\S+$/.test(values.email)) errors.email = 'Email tidak valid.';
+      if(!values.phone || !/^[0-9+]{6,20}$/.test(values.phone)) errors.phone = 'Masukkan nomor telepon yang benar (hanya angka dan +).';
+      if(!values.position) errors.position = 'Pilih posisi.';
+      if(!values.resume || values.resume.trim().length < 10) errors.resume = 'Tuliskan ringkasan pengalaman minimal 10 karakter.';
+      return errors;
+    }
+
+    form.addEventListener('submit', e=>{
+      e.preventDefault(); clearErrors();
+      const values = {
+        name: form.name.value,
+        email: form.email.value,
+        phone: form.phone.value,
+        position: form.position.value,
+        resume: form.resume.value,
+        createdAt: new Date().toISOString()
+      };
+      const errs = validate(values);
+      if(Object.keys(errs).length){
+        Object.entries(errs).forEach(([k,v])=>{
+          const el = form.querySelector('.error[data-for="'+k+'"]'); if(el) el.textContent = v;
+        });
+        return;
+      }
+      const arr = readApplicants(); arr.push(values); saveApplicants(arr); form.reset(); render();
+      alert('Terima kasih — lamaran Anda telah disimpan (demo lokal).');
+    });
+
+    document.getElementById('clearAll').addEventListener('click', ()=>{
+      if(!confirm('Hapus semua data pelamar dari localStorage?')) return;
+      localStorage.removeItem(storageKey); render();
+    });
+
+    // initial render
+    render();
+
+    // set header admin contact (change number to your admin contact in international format, e.g. 6281234567890)
+    const adminNumber = '6281568410512';
+    const adminLink = phoneToWaLink(adminNumber, 'Halo ADMIN SAYA INGIN MENANYAKAN RECUITMEN CLAN INDOMILK POINBLANK.');
+    const contactWA = document.getElementById('contactWA');
+    if(contactWA){ contactWA.href = adminLink; contactWA.target = '_blank'; }
+  </script>
+</body>
+</html>

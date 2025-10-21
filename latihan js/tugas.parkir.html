@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Parkir</title>
+</head>
+<body>
+    <h1 id="hasil"></h1>
+    <input id="jam" type="number" placeholder="Jam parkir">
+    <button id="cek">Cek Parkir</button>
+    <script>
+    document.getElementById("cek").onclick = function() {
+      let jam = Number(document.getElementById("jam").value);
+      let hasil = "";
+      let total = 0;
+      let i = 1;
+      while (i <= jam) {
+        let biaya = 0;
+        if (i == 1) {
+          biaya = 2000;
+          hasil += "Jam ke-" + i + ": Rp" + biaya + "<br>";
+        } else if (i == 2) {
+          biaya = 1500;
+          hasil += "Jam ke-" + i + ": Rp" + biaya + "<br>";
+        } else if (i <= 5) {
+          biaya = 1000;
+          hasil += "Jam ke-" + i + ": Rp" + biaya + "<br>";
+        } else {
+          biaya = 500;
+          hasil += "Jam ke-" + i + ": Rp" + biaya + "<br>";
+        }
+        total += biaya;
+        i++;
+      }
+      hasil += "Total Parkir: Rp" + total;
+      document.getElementById("hasil").innerHTML = hasil;
+    }
+    </script>
+</body>
+</html>
